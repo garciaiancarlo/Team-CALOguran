@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team CALOguran - Election 2025</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Open+Sans:wght@400;600&display=swap');
+        
+        :root {
+            --primary-blue: #0056b3;
+            --secondary-blue: #003366;
+            --accent-blue: #007bff;
+            --light-blue: #e6f2ff;
+            --white: #ffffff;
+            --dark-gray: #333333;
+            --light-gray: #f5f5f5;
+            --gold: #FFD700;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Music Player Controls */
+        .music-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            background: var(--primary-blue);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            border: 2px solid var(--gold);
+        }
+        
+        .music-control:hover {
+            transform: scale(1.1);
+            background: var(--secondary-blue);
+        }
+        
+        .music-control i {
+            color: var(--white);
+            font-size: 24px;
+        }
+        
+        .music-control .fa-volume-up {
+            display: none;
+        }
+        
+        .music-control.active .fa-volume-up {
+            display: block;
+        }
+        
+        .music-control.active .fa-volume-mute {
+            display: none;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+            color: var(--white);
+            padding: 50px 0;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--gold), var(--white), var(--gold));
+        }
+        
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 3.2rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 2.2rem;
+            margin: 15px 0 0;
+            color: var(--white);
+        }
+        
+        .tagline {
+            font-size: 1.4rem;
+            margin-top: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .tagline::before, .tagline::after {
+            content: "✦";
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+        
+        .team-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 35px;
+            margin-bottom: 50px;
+        }
+        
+        .candidate-card {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            border: none;
+            position: relative;
+        }
+        
+        .candidate-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+        }
+        
+        .mayor-card {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            border: 3px solid var(--gold);
+        }
+        
+        @media (min-width: 992px) {
+            .mayor-card {
+                flex-direction: row;
+            }
+            
+            .mayor-card .card-image {
+                flex: 1;
+            }
+            
+            .mayor-card .card-content {
+                flex: 2;
+            }
+        }
+        
+        .card-image {
+            height: 420px;
+            background-color: var(--light-blue);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mayor-card .card-image {
+            height: 450px;
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            transition: transform 0.5s ease;
+        }
+        
+        .candidate-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+        
+        .card-content {
+            padding: 30px;
+        }
+        
+        .mayor-card .card-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .card-header {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .vote-tag {
+            display: inline-block;
+            padding: 8px 22px;
+            border-radius: 25px;
+            font-weight: 800;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+        }
+        
+        .vote-new {
+            background: linear-gradient(135deg, #ff6b6b, #ff3838);
+            color: var(--white);
+        }
+        
+        .vote-reelect {
+            background: linear-gradient(135deg, #4CAF50, #2E8B57);
+            color: var(--white);
+        }
+        
+        .vote-mayor {
+            background: linear-gradient(135deg, var(--accent-blue), var(--primary-blue));
+            color: var(--white);
+            font-size: 1.2rem;
+            padding: 10px 25px;
+        }
+        
+        .candidate-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            margin: 15px 0 8px;
+            color: var(--secondary-blue);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .candidate-name::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--gold);
+        }
+        
+        .mayor-name {
+            font-size: 2.4rem;
+        }
+        
+        .candidate-position {
+            font-size: 1.2rem;
+            color: var(--primary-blue);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+        }
+        
+        .mayor-position {
+            font-size: 1.5rem;
+        }
+        
+        .card-number {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 2px solid var(--white);
+        }
+        
+        .mayor-number {
+            width: 80px;
+            height: 80px;
+            font-size: 3rem;
+            border: 3px solid var(--gold);
+        }
+        
+        .candidate-bio {
+            margin: 20px 0;
+            color: #555;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+        
+        .mayor-bio {
+            font-size: 1.2rem;
+            line-height: 1.9;
+        }
+        
+        .slogan {
+            font-style: italic;
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed #eee;
+            position: relative;
+        }
+        
+        .slogan::before {
+            content: """;
+            font-size: 3rem;
+            color: var(--gold);
+            position: absolute;
+            top: -15px;
+            left: -10px;
+            opacity: 0.3;
+        }
+        
+        .mayor-slogan {
+            font-size: 1.5rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+            color: var(--white);
+            border-radius: 0 0 10px 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--gold), var(--white), var(--gold));
+        }
+        
+        .footer-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .footer-tagline {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .footer-tagline::before, .footer-tagline::after {
+            content: "•";
+            margin: 0 10px;
+            color: var(--gold);
+        }
+        
+        .social-links {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .social-links a {
+            color: var(--white);
+            background: rgba(255,255,255,0.1);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .social-links a:hover {
+            background: var(--gold);
+            color: var(--secondary-blue);
+            transform: translateY(-3px);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin: 50px 0 30px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            display: inline-block;
+            background: var(--white);
+            padding: 10px 30px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            color: var(--primary-blue);
+            position: relative;
+            z-index: 1;
+            border: 2px solid var(--gold);
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            z-index: 0;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.4rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .team-section {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            .mayor-card {
+                flex-direction: column;
+            }
+            
+            .card-image {
+                height: 350px;
+            }
+            
+            .mayor-card .card-image {
+                height: 380px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Music Control Button -->
+    <div class="music-control" id="musicControl" title="Toggle Music">
+        <i class="fas fa-volume-up"></i>
+        <i class="fas fa-volume-mute"></i>
+    </div>
+    
+    <!-- Audio Element (Hidden) -->
+    <audio id="backgroundMusic" loop>
+        <source src="May 10, 2025.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="container">
+        <header>
+            <h1>Team CALOguran</h1>
+            <h2>Election 2025</h2>
+            <div class="tagline">Unity • Progress • Service</div>
+        </header>
+        
+        <main>
+            <!-- Mayor First -->
+            <div class="candidate-card mayor-card">
+                <div class="card-image">
+                    <img src="pic/10.jpg" alt="Mayor Reynan Calo">
+                    <div class="card-number mayor-number">1</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <div class="vote-tag vote-mayor">Vote #1</div>
+                        <h3 class="candidate-name mayor-name">Reynan Calo</h3>
+                        <div class="candidate-position mayor-position">for MAYOR</div>
+                    </div>
+                    <p class="candidate-bio mayor-bio">A visionary leader with a proven track record of public service. Mayor Reynan Calo has transformed our community through innovative programs and infrastructure development while maintaining fiscal responsibility. His leadership has brought unprecedented growth and stability to our city.</p>
+                    <p class="slogan mayor-slogan">"Together, we will build a brighter future for all citizens!"</p>
+                </div>
+            </div>
+            
+            <div class="section-title">
+                <h2>Our Councilor Candidates</h2>
+            </div>
+            
+            <div class="team-section">
+                <!-- Candidate 1 -->
+                <div class="candidate-card">
+                    <div class="card-image">
+                        <img src="pic/11.jpg" alt="Jhay-R Arceo">
+                        <div class="card-number">1</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="vote-tag vote-new">Vote!</div>
+                            <h3 class="candidate-name">Jhay-R Arceo</h3>
+                            <div class="candidate-position">for Councilor</div>
+                        </div>
+                        <p class="slogan">"Fresh ideas for our community's future"</p>
+                    </div>
+                </div>
+                
+                <!-- Candidate 3 -->
+                <div class="candidate-card">
+                    <div class="card-image">
+                        <img src="pic/12.jpg" alt="Kim Cosme">
+                        <div class="card-number">3</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="vote-tag vote-reelect">Re-elect!</div>
+                            <h3 class="candidate-name">Kim Cosme</h3>
+                            <div class="candidate-position">for Councilor</div>
+                        </div>
+                        <p class="slogan">"Proven leadership, continued service"</p>
+                    </div>
+                </div>
+                
+                <!-- Candidate 4 -->
+                <div class="candidate-card">
+                    <div class="card-image">
+                        <img src="pic/13.jpg" alt="Alex Cruz">
+                        <div class="card-number">4</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="vote-tag vote-reelect">Re-elect!</div>
+                            <h3 class="candidate-name">Alex Cruz</h3>
+                            <div class="candidate-position">for Councilor</div>
+                        </div>
+                        <p class="slogan">"Dedicated to serving our people"</p>
+                    </div>
+                </div>
+                
+                <!-- Candidate 6 -->
+                <div class="candidate-card">
+                    <div class="card-image">
+                        <img src="pic/14.jpg" alt="Roy Galang">
+                        <div class="card-number">6</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="vote-tag vote-reelect">Re-elect!</div>
+                            <h3 class="candidate-name">Roy Galang</h3>
+                            <div class="candidate-position">for Councilor</div>
+                        </div>
+                        <p class="slogan">"Experience you can trust"</p>
+                    </div>
+                </div>
+                
+                <!-- Candidate 7 -->
+                <div class="candidate-card">
+                    <div class="card-image">
+                        <img src="pic/15.jpg" alt="Nat Gopez">
+                        <div class="card-number">7</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="vote-tag vote-reelect">Re-elect!</div>
+                            <h3 class="candidate-name">Nat Gopez</h3>
+                            <div class="candidate-position">for Councilor</div>
+                        </div>
+                        <p class="slogan">"Committed to excellence in public service"</p>
+                    </div>
+                </div>
+                
+                <!-- Candidate 12 -->
+                <div class="candidate-card">
+                    <div class="card-image">
+                        <img src="pic/16.jpg" alt="Jess Pineda">
+                        <div class="card-number">12</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="vote-tag vote-new">Vote!</div>
+                            <h3 class="candidate-name">Jess Pineda</h3>
+                            <div class="candidate-position">for Councilor</div>
+                        </div>
+                        <p class="slogan">"New energy for positive change"</p>
+                    </div>
+                </div>
+                
+                <!-- Candidate 14 -->
+                <div class="candidate-card">
+                    <div class="card-image">
+                        <img src="pic/17.jpg" alt="Rico Sta. Cruz">
+                        <div class="card-number">14</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="vote-tag vote-reelect">Re-elect!</div>
+                            <h3 class="candidate-name">Rico Sta. Cruz</h3>
+                            <div class="candidate-position">for Councilor</div>
+                        </div>
+                        <p class="slogan">"Your voice in local government"</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <div class="footer-logo">TEAM CALOGURAN</div>
+            <div class="footer-tagline">#1 for Mayor Reynan Calo and Councilors</div>
+            <div class="footer-tagline">Leadership • Service • Progress</div>
+            
+            <div class="social-links">
+                <a href="https://www.facebook.com/profile.php?id=61566707827777&sk=photos"><i class="fab fa-facebook-f"></i></a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Music Control Functionality
+        const musicControl = document.getElementById('musicControl');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        
+        // Set volume to 30% to be less intrusive
+        backgroundMusic.volume = 0.3;
+        
+        musicControl.addEventListener('click', function() {
+            this.classList.toggle('active');
+            
+            if (this.classList.contains('active')) {
+                backgroundMusic.play().catch(e => console.log("Auto-play prevented:", e));
+            } else {
+                backgroundMusic.pause();
+            }
+        });
+        
+        // Auto-play music after user interaction (to comply with browser policies)
+        document.body.addEventListener('click', function firstInteraction() {
+            if (musicControl.classList.contains('active')) {
+                backgroundMusic.play().catch(e => console.log("Auto-play prevented:", e));
+            }
+            document.body.removeEventListener('click', firstInteraction);
+        }, { once: true });
+    </script>
+</body>
+</html>
